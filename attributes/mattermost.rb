@@ -1,4 +1,4 @@
-default['mattermost']['package']['url'] = "https://releases.mattermost.com/3.5.1/mattermost-enterprise-3.5.1-linux-amd64.tar.gz"
+default['mattermost']['package']['url'] = "https://releases.mattermost.com/3.5.1/mattermost-3.5.1-linux-amd64.tar.gz"
 default['mattermost']['package']['checksum'] = "0aa376254b74c32672118e304dd931d507968209f44cb5ca4099c8cc5b511699"
 
 default['mattermost']['config']['install_path'] = "/opt" # installs to /opt/mattermost
