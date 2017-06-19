@@ -25,7 +25,8 @@ directory node['mattermost']['config']['data_dir'] do
   action :create
 end
 
-include_recipe 'mattermost::database'
+include_recipe 'mattermost::database' if node['mattermost']['database']['install_mysql']
+
 
 template "#{node['mattermost']['config']['install_path']}/mattermost/config/config.json" do
   source 'config.json.erb'
@@ -34,12 +35,23 @@ template "#{node['mattermost']['config']['install_path']}/mattermost/config/conf
   notifies :restart, 'service[mattermost]'
 end
 
-template '/etc/init/mattermost.conf' do
-  source 'mattermost.conf.erb'
-  owner 'root'
-  group 'root'
-  mode '0644'
-  notifies :restart, 'service[mattermost]'
+case node['platform_family']
+when 'debian'
+  template '/etc/init/mattermost.conf' do
+    source 'mattermost.conf.erb'
+    owner 'root'
+    group 'root'
+    mode '0644'
+    notifies :restart, 'service[mattermost]'
+  end
+when 'rhel'
+  template '/etc/systemd/system/mattermost.service' do
+    source 'mattermost.service.erb'
+    owner 'root'
+    group 'root'
+    mode '0644'
+    notifies :restart, 'service[mattermost]'
+  end
 end
 
 service 'mattermost' do
